@@ -1,4 +1,5 @@
 import traceback
+from time import time
 
 import numpy as np
 import matplotlib.pyplot as plt
@@ -23,6 +24,7 @@ class Controller:
         )
 
     def process_image(self, stream):
+        # start_time = time()
         user_image_array = np.asarray(plt.imread(stream))
 
         try:
@@ -34,9 +36,8 @@ class Controller:
             error = Error.unknown_error()
             return CelebSimilarityResponse.from_error(error).to_json()
 
-        # TODO remove
-        plt.imshow(preprocessed_image.reshape((224, 224, 3)))
-        plt.show()
+        # plt.imshow(preprocessed_image.reshape((224, 224, 3)))
+        # plt.show()
 
         try:
             predictions = self._predictor.predict(preprocessed_image)
@@ -59,5 +60,6 @@ class Controller:
             return prediction_response.to_json()
 
         prediction_response = CelebSimilarityResponse(prediction_views)
+        # print((time() - start_time) * 1000)
 
         return prediction_response.to_json()

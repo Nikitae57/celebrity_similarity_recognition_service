@@ -21,14 +21,13 @@ class Predictor:
         return vgg_face
 
     def predict(self, img) -> [ModelOutput]:
-        start = time.time()
-
+        # start = time.time()
         predictions = self._predict(img)
         decoded_predictions = self._predictions_decoder.decode_predictions(predictions)
         predictions_num = len(decoded_predictions)
         domain_model_outputs = [ModelOutput.from_raw_model_output(decoded_predictions[i]) for i in range(predictions_num)]
-        t = time.time() - start
-        print(t * 1000, 'ms')
+        # t = time.time() - start
+        # print(t * 1000, 'ms')
 
         return domain_model_outputs
 
