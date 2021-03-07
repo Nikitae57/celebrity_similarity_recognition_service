@@ -3,7 +3,4 @@
 output/
 venv/
 __pycache__/
-wavs/
-ser_prod_visualization/input/
-ser_prod_visualization/output/
-ser_prod_server_load_testing/audio
+bin/

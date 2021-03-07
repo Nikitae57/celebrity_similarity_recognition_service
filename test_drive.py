@@ -1,20 +1,8 @@
-import numpy as np
-import jsonpickle
+from model.vectorise_image.image_vectorizer import ImageVectorizer
+from PIL import Image
 
-from matplotlib import pyplot as plt
 
-from model.celeb_similarity.predictor import Predictor
-from model.celeb_similarity.image_preprocessor import ImagePreprocessor
-
-preprocessor = ImagePreprocessor()
-
-pixels = plt.imread('img.jpg')
-preprocessed_img = preprocessor.preprocess_image(pixels)
-plt.imshow(preprocessed_img.reshape(224,224,3).astype(np.uint8))
-plt.show()
-
-recognizer = Predictor()
-preds = recognizer.predict(preprocessed_img)
-preds_json = jsonpickle.encode(preds, unpicklable=False)
-
-print(preds_json)
+img = Image.open('img/me/1.jpg')
+vectorizer = ImageVectorizer()
+vector = vectorizer.vectorize(img)
+print(vector)

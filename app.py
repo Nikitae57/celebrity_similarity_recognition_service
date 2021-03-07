@@ -3,12 +3,13 @@ import traceback
 from flask import Flask, redirect, request, abort
 from werkzeug.exceptions import HTTPException
 
+import config
 from controller.celeb_similarity.controller import Controller
 
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
-controller = Controller()
+celeb_similarity_controller = Controller(config.MODEL_NAME)
 
 
 def is_allowed_file(filename: str) -> bool:
@@ -30,7 +31,7 @@ def predict():
             return redirect(request.url)
 
         if image and is_allowed_file(image.filename):
-            return controller.process_image(image)
+            return celeb_similarity_controller.process_image(image)
 
         return abort(400, {'message': f'Invalid file extension. Supported extensions: {ALLOWED_IMAGE_EXTENSIONS}'})
     except HTTPException:

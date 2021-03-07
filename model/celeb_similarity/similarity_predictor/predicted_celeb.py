@@ -1,6 +1,6 @@
 class PredictedCeleb:
     def __init__(self, name: str, probability: float):
-        self.label = name
+        self.name = name
         self.probability = probability
 
     @staticmethod
