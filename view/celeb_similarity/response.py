@@ -1,12 +1,16 @@
 import jsonpickle
 from model.celeb_similarity.similarity_predictor.model_output import ModelOutput
-from view.celeb_similarity.errors import Error
-from view.celeb_similarity import errors
+from view.celeb_similarity.prediction import SimilarityPredictionForDetectedFace
+from view.errors import Error
 
 
 class CelebSimilarityResponse:
-    def __init__(self, model_outputs: [ModelOutput] = None, error: Error = None):
-        self.model_outputs = model_outputs
+    def __init__(
+        self,
+        predictions_for_each_face: [SimilarityPredictionForDetectedFace] = None,
+        error: Error = None,
+    ):
+        self.model_outputs = predictions_for_each_face
         self.error = error
 
     def to_json(self, top_results_count=3):
@@ -20,8 +24,8 @@ class CelebSimilarityResponse:
         return outputs_json
 
     @staticmethod
-    def from_model_outputs(model_outputs: [ModelOutput]):
-        response = CelebSimilarityResponse(model_outputs=model_outputs)
+    def from_model_outputs(predictions_for_each_face: [SimilarityPredictionForDetectedFace]):
+        response = CelebSimilarityResponse(predictions_for_each_face=predictions_for_each_face)
         return response
 
     @staticmethod

@@ -9,7 +9,11 @@ from controller.celeb_similarity.controller import Controller
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg'}
 
 app = Flask(__name__)
-celeb_similarity_controller = Controller(config.MODEL_NAME)
+celeb_similarity_controller = Controller(
+    model_name=config.MODEL_NAME,
+    faces_img_dir=config.CELEB_IMAGES_FOLDER,
+    faces_vectors_dir=config.CELEB_VECTORIZED_IMAGES_FOLDER
+)
 
 
 def is_allowed_file(filename: str) -> bool:

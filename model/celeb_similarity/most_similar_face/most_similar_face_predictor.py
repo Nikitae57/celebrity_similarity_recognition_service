@@ -1,6 +1,6 @@
 import os
 import numpy as np
-from model.vectorise_image.image_vectorizer import ImageVectorizer
+from model.celeb_similarity.most_similar_face.image_vectorizer import ImageVectorizer
 from model import util
 from scipy.spatial import KDTree
 from PIL import Image
@@ -46,6 +46,7 @@ class MostSimilarFacePredictor:
 
         person_name_to_vector = dict()
         img_dirs = os.listdir(faces_img_root_dir)
+        img_dirs = list(filter(lambda x: os.path.isdir(os.path.join(faces_img_root_dir, x)), img_dirs))
         for img_dir in img_dirs:
             person_name = os.path.basename(os.path.normpath(img_dir))
 
@@ -56,9 +57,12 @@ class MostSimilarFacePredictor:
                 raise ValueError(f'Failed to find vector equivalent dir for {img_dir}')
 
             vectorized_images = []
-            for img_path in os.listdir(img_dir):
-                vector_file = util.get_same_basename_files(img_path, vector_dir)[0]
-                vector = np.fromfile(os.path.join(vector_dir, vector_file))
+            for img_file_name in os.listdir(img_dir):
+                vector_file = os.path.join(vector_dir, img_file_name)
+                vector_file = f'{vector_file}.{util.NUMPY_FILE_EXTENSION}'
+
+                vector = np.load(vector_file)
+                img_path = os.path.join(img_dir, img_file_name)
                 vectorized_image = VectorizedImage(img_path=img_path, img_vector=vector)
                 vectorized_images.append(vectorized_image)
 

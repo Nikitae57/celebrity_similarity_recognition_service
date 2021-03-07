@@ -1,4 +1,4 @@
-from model.vectorise_image.image_vectorizer import ImageVectorizer
+from model.celeb_similarity.most_similar_face.image_vectorizer import ImageVectorizer
 from PIL import Image
 
 
