@@ -2,5 +2,5 @@
 .idea/
 output/
 venv/
-__pycache__/
+static/
 bin/

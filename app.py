@@ -1,11 +1,14 @@
 import os
 import traceback
-from flask import Flask, redirect, request, abort
+import uuid
+
+from flask import Flask, redirect, request, abort, send_file
 from werkzeug.exceptions import HTTPException
 
 import config
 from config import ResponseConverterType
 from controller.celeb_similarity.controller import Controller
+from controller.media.controller import MediaController
 from model.celeb_similarity.predictions_converter.json_converter import JsonConverter
 from model.celeb_similarity.predictions_converter.proto_converter import ProtoConverter
 
@@ -25,12 +28,16 @@ def init_celeb_similarity_controller():
         model_name=config.MODEL_NAME,
         faces_img_dir=config.CELEB_IMAGES_DIR,
         faces_vectors_dir=config.CELEB_VECTORIZED_IMAGES_DIR,
-        user_face_cache_dir=config.USER_FACE_CACHE_DIR,
+        user_face_cache_dir=config.CROPPED_USER_FACES,
         response_converter=response_converter
     )
 
+def init_media_controller():
+    return MediaController(config.CROPPED_USER_FACES)
+
 
 celeb_similarity_controller = init_celeb_similarity_controller()
+media_controller = init_media_controller()
 
 
 def is_allowed_file(filename: str) -> bool:
@@ -64,18 +71,18 @@ def predict():
     return ''
 
 
-# @app.route('/api/v1/cropped_face/{}', methods=['GET'])
-# def get_cropp():
-#     try:
-#
-#         return abort(400, {'message': f'Invalid file extension. Supported extensions: {ALLOWED_IMAGE_EXTENSIONS}'})
-#     except HTTPException:
-#         raise
-#     except:
-#         traceback.print_exc()
-#         abort(503)
-#
-#     return ''
+@app.route('/api/v1/cropped-face/<face_uuid>', methods=['GET'])
+def get_cropped_user_face(face_uuid: uuid):
+    try:
+        image_url = media_controller.get_cropped_face_url(face_uuid=face_uuid)
+        return send_file(image_url, mimetype='image/*', as_attachment=True)
+    except HTTPException:
+        raise
+    except FileNotFoundError:
+        abort(404, {'message': 'Face not found'})
+    except:
+        traceback.print_exc()
+        abort(503)
 
 
 if __name__ == '__main__':
