@@ -1,0 +1,50 @@
+syntax = "proto3";
+
+package FaceFeaturesProtocol;
+
+option optimize_for = LITE_RUNTIME;
+
+message DynamicValue {
+    map<string,string> variables = 1;
+}
+
+enum FaceFeatures {
+    CELEB_SIMILARITY = 0;
+}
+
+message GetFaceFeatures {
+  FaceFeatures desired_features = 1;
+}
+
+message PredictedCeleb {
+  string name = 1;
+  float probability = 2;
+}
+
+message CelebSimilarityPredictions {
+  string most_similar_face_url = 1;
+  repeated PredictedCeleb predicted_celebs = 2;
+}
+
+message CelebSimilarityFeature {
+  repeated CelebSimilarityPredictions celeb_similarity_predictions = 1;
+}
+
+message GetFaceFeaturesResponse {
+  Error error = 1;
+  string user_cropped_face_id = 2;
+
+  oneof MessageType {
+    CelebSimilarityFeature celeb_similarity_features = 3;
+  }
+}
+
+enum ErrorType {
+    UNKNOWN_ERROR = 0;
+    MORE_THAN_ONE_FACE = 1;
+}
+
+message Error {
+  ErrorType type = 1;
+  string error_message = 2;
+}
