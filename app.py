@@ -32,6 +32,7 @@ def init_celeb_similarity_controller():
         response_converter=response_converter
     )
 
+
 def init_media_controller():
     return MediaController(config.CROPPED_USER_FACES)
 
@@ -64,11 +65,11 @@ def predict():
         return abort(400, {'message': f'Invalid file extension. Supported extensions: {ALLOWED_IMAGE_EXTENSIONS}'})
     except HTTPException:
         raise
-    except:
+    except Exception:
         traceback.print_exc()
         abort(503)
 
-    return ''
+    return None
 
 
 @app.route('/api/v1/cropped-face/<face_uuid>', methods=['GET'])
@@ -80,7 +81,7 @@ def get_cropped_user_face(face_uuid: uuid):
         raise
     except FileNotFoundError:
         abort(404, {'message': 'Face not found'})
-    except:
+    except Exception:
         traceback.print_exc()
         abort(503)
 

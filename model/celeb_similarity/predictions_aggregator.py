@@ -7,7 +7,8 @@ from PIL import Image
 from model import hparams
 from model.celeb_similarity.aggregator_output import AggregatorOutput
 from model.celeb_similarity.most_similar_face.most_similar_face_predictor import MostSimilarFacePredictor
-from model.celeb_similarity.similarity_predictor.image_preprocessor import ImagePreprocessor, MoreThanOneFaceError
+from model.celeb_similarity.similarity_predictor.image_preprocessor import ImagePreprocessor, MoreThanOneFaceError, \
+    NoFacesError
 from model.celeb_similarity.similarity_predictor.predictor import Predictor
 from view.celeb_similarity.prediction import SimilarityPredictionForFace
 from view.celeb_similarity.response import CelebSimilarityDomain
@@ -38,6 +39,9 @@ class PredictionsAggregator:
             user_face_id = self._save_user_face(user_face_array)
         except MoreThanOneFaceError:
             error = Error.more_than_one_face()
+            return CelebSimilarityDomain.from_error(error)
+        except NoFacesError:
+            error = Error.no_faces()
             return CelebSimilarityDomain.from_error(error)
         except Exception:
             error = Error.unknown_error()

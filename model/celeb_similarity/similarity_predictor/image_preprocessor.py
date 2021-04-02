@@ -11,6 +11,10 @@ class MoreThanOneFaceError(Exception):
     pass
 
 
+class NoFacesError(Exception):
+    pass
+
+
 class ImagePreprocessor:
     def __init__(self):
         self.__graph = tf.get_default_graph()
@@ -72,8 +76,11 @@ class ImagePreprocessor:
     def preprocess_image(self, pixels, target_shape=(224, 224)):
         # pixels = np.asarray(Image.open(pixels))
         face_arrays = self._get_faces_from_image(pixels, target_shape)
-        if len(face_arrays) != 1:
+        num_faces = len(face_arrays)
+        if num_faces > 1:
             raise MoreThanOneFaceError()
+        elif num_faces < 1:
+            raise NoFacesError()
 
         face_array = face_arrays[0]
         samples = np.asarray(np.expand_dims(face_array, axis=0), dtype=np.float64)
