@@ -48,7 +48,7 @@ class MostSimilarFacePredictor:
         img_dirs = os.listdir(faces_img_root_dir)
         img_dirs = list(filter(lambda x: os.path.isdir(os.path.join(faces_img_root_dir, x)), img_dirs))
         for img_dir in img_dirs:
-            person_name = os.path.basename(os.path.normpath(img_dir))
+            person_name = os.path.basename(os.path.normpath(img_dir)).strip()
 
             vector_dir = os.path.join(faces_vectors_root_dir, img_dir)
             img_dir = os.path.join(faces_img_root_dir, img_dir)
