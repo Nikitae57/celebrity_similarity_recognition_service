@@ -1,12 +1,10 @@
-from model.celeb_similarity.most_similar_face.image_vectorizer import ImageVectorizer
-from PIL import Image
 import numpy as np
 
 # img = Image.open('img/me/1.jpg')
 # vectorizer = ImageVectorizer()
 # vector = vectorizer.vectorize(img)
 # print(vector)
-# from model.celeb_similarity.similarity_predictor.predictor import Predictor
+# from model.celeb_similarity2.celeb_similarity2.predictor import Predictor
 #
 # predictor = Predictor()
 # predictor.predict(123)

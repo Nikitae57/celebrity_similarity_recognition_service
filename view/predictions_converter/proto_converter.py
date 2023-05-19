@@ -1,11 +1,11 @@
-from model.celeb_similarity.predictions_converter.base_converter import BaseConverter
-from view.celeb_similarity.response import CelebSimilarityDomain
+from view.predictions_converter.base_converter import BaseConverter
+from view.celeb_similarity.response import CelebSimilarityResult
 from view.errors import Error, ErrorType
-from model.proto import protocol_pb2 as pb
+from view.proto import protocol_pb2 as pb
 
 
 class ProtoConverter(BaseConverter):
-    def convert(self, celeb_similarity_domain: CelebSimilarityDomain) -> str:
+    def convert(self, celeb_similarity_domain: CelebSimilarityResult) -> str:
         error_pb = self._error_to_pb(celeb_similarity_domain.error)
 
         predictions_pb_array = []

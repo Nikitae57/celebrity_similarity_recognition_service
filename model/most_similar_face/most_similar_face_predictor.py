@@ -1,29 +1,11 @@
 import os
 import numpy as np
-from model.celeb_similarity.most_similar_face.image_vectorizer import ImageVectorizer
+from model.most_similar_face.image_vectorizer import ImageVectorizer
 from model import util
-from scipy.spatial import KDTree
 from PIL import Image
 
-
-class SimilarFace:
-    def __init__(self, person_name: str, similar_face_url: str):
-        self.person_name = person_name
-        self.similar_face_url = similar_face_url
-
-
-class VectorizedImage:
-    def __init__(self, img_path: str, img_vector: np.ndarray):
-        self.img_vector = img_vector
-        self.img_path = img_path
-
-
-class VectorizedPerson:
-    def __init__(self, person_name: str, vectorized_faces: [VectorizedImage]):
-        vectors = [vectorized_face.img_vector for vectorized_face in vectorized_faces]
-        self.tree = KDTree(vectors)
-        self.vectorized_faces = vectorized_faces
-        self.name = person_name
+from model.most_similar_face.model.vectorized_image import VectorizedImage
+from model.most_similar_face.model.vectorized_person import VectorizedPerson
 
 
 class MostSimilarFacePredictor:

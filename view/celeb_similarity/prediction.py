@@ -1,4 +1,4 @@
-from model.celeb_similarity.similarity_predictor.model_output import ModelOutput
+from model.celeb_similarity.model.model_output import ModelOutput
 
 
 class SimilarityPredictionForFace:

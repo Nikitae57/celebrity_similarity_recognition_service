@@ -7,10 +7,10 @@ from werkzeug.exceptions import HTTPException
 
 import config
 from config import ResponseConverterType
-from controller.celeb_similarity.controller import Controller
+from controller.celeb_similarity.celeb_similarity_controller import CelebSimilarityController
 from controller.media.controller import MediaController
-from model.celeb_similarity.predictions_converter.json_converter import JsonConverter
-from model.celeb_similarity.predictions_converter.proto_converter import ProtoConverter
+from view.predictions_converter.json_converter import JsonConverter
+from view.predictions_converter.proto_converter import ProtoConverter
 
 app = Flask(__name__)
 ALLOWED_IMAGE_EXTENSIONS = {'png', 'jpg', 'jpeg'}
@@ -24,7 +24,7 @@ def init_celeb_similarity_controller():
     else:
         raise ValueError('Unknown celeb similarity controller type')
 
-    return Controller(
+    return CelebSimilarityController(
         model_name=config.MODEL_NAME,
         faces_img_dir=config.CELEB_IMAGES_DIR,
         faces_vectors_dir=config.CELEB_VECTORIZED_IMAGES_DIR,

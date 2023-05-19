@@ -1,10 +1,8 @@
 import numpy as np
 import tensorflow as tf
-
-from mtcnn.mtcnn import MTCNN
 from PIL import Image
 from keras_vggface.utils import preprocess_input
-from matplotlib import pyplot as plt
+from mtcnn.mtcnn import MTCNN
 
 
 class MoreThanOneFaceError(Exception):
@@ -20,6 +18,21 @@ class ImagePreprocessor:
         self.__graph = tf.get_default_graph()
         self.__face_detector = self._load_model()
 
+    def preprocess_image(self, pixels, target_shape=(224, 224)):
+        face_arrays = self._get_faces_from_image(pixels, target_shape)
+        num_faces = len(face_arrays)
+        if num_faces > 1:
+            raise MoreThanOneFaceError()
+        elif num_faces < 1:
+            raise NoFacesError()
+
+        face_array = face_arrays[0]
+        samples = np.asarray(np.expand_dims(face_array, axis=0), dtype=np.float64)
+        # prepare the face for the model, e.g. center pixels
+        samples = preprocess_input(samples, version=2)
+
+        return samples, face_array
+
     def _load_model(self):
         with self.__graph.as_default():
             model = MTCNN()
@@ -31,7 +44,7 @@ class ImagePreprocessor:
             results = self.__face_detector.detect_faces(pixels)
             for result in results:
                 coords = self._face_detection_result_to_coords(result)
-                face_array = self.cut_face_from_img(pixels, coords, target_shape)
+                face_array = self._cut_face_from_img(pixels, coords, target_shape)
                 face_arrays.append(face_array)
 
         return face_arrays
@@ -45,7 +58,7 @@ class ImagePreprocessor:
         return coords
 
     @staticmethod
-    def cut_face_from_img(img_array: np.ndarray, face_coords, target_size, padding_fraction=0.2) -> np.ndarray:
+    def _cut_face_from_img(img_array: np.ndarray, face_coords, target_size, padding_fraction=0.2) -> np.ndarray:
         image = Image.fromarray(img_array)
 
         y1, y2, x1, x2 = face_coords
@@ -72,19 +85,3 @@ class ImagePreprocessor:
         thumb = image.crop((left, top, right, bottom)).resize(target_size)
 
         return np.asarray(thumb)
-
-    def preprocess_image(self, pixels, target_shape=(224, 224)):
-        # pixels = np.asarray(Image.open(pixels))
-        face_arrays = self._get_faces_from_image(pixels, target_shape)
-        num_faces = len(face_arrays)
-        if num_faces > 1:
-            raise MoreThanOneFaceError()
-        elif num_faces < 1:
-            raise NoFacesError()
-
-        face_array = face_arrays[0]
-        samples = np.asarray(np.expand_dims(face_array, axis=0), dtype=np.float64)
-        # prepare the face for the model, e.g. center pixels
-        samples = preprocess_input(samples, version=2)
-
-        return samples, face_array

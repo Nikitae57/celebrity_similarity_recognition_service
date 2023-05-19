@@ -1,4 +1,4 @@
-from model.celeb_similarity.similarity_predictor.predicted_celeb import PredictedCeleb
+from model.celeb_similarity.model.predicted_celeb import PredictedCeleb
 
 
 class ModelOutput:

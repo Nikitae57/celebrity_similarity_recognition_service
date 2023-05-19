@@ -1,13 +1,11 @@
-from time import time
-
 import matplotlib.pyplot as plt
 import numpy as np
 
-from model.celeb_similarity.predictions_aggregator import PredictionsAggregator
-from model.celeb_similarity.predictions_converter.base_converter import BaseConverter
+from model.celeb_similarity.predictor import Predictor
+from view.predictions_converter.base_converter import BaseConverter
 
 
-class Controller:
+class CelebSimilarityController:
     def __init__(
             self,
             model_name: str,
@@ -16,7 +14,7 @@ class Controller:
             user_face_cache_dir: str,
             response_converter: BaseConverter
     ):
-        self._celeb_similarity_predictions_aggregator = PredictionsAggregator(
+        self._celeb_similarity_predictor = Predictor(
             model_name=model_name,
             faces_img_dir=faces_img_dir,
             faces_vectors_dir=faces_vectors_dir,
@@ -27,9 +25,9 @@ class Controller:
     def process_image(self, stream):
         # start_time = time()
         user_image_array = self._read_image(stream)
-        aggregated_predictions = self._celeb_similarity_predictions_aggregator.predict(user_image_array)
+        predictions = self._celeb_similarity_predictor.predict(user_image_array)
 
-        response = self._response_converter.convert(aggregated_predictions)
+        response = self._response_converter.convert(predictions)
         # print((time() - start_time) * 1000)
 
         return response
